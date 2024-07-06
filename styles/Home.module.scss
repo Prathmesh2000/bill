@@ -1,0 +1,54 @@
+.formGroup {
+    margin-bottom: 1em;
+  
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+    }
+  
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  
+    .radioGroup {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 1em;
+    }
+  
+    .productGroup {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+  
+      > div {
+        flex: 1;
+      }
+  
+      button {
+        align-self: center;
+        margin-left: 10px;
+      }
+    }
+  }
+  
+  .balance {
+    color: blue;
+  
+    &.negative {
+      color: red;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .productGroup {
+      flex-direction: column;
+    }
+  }
+  

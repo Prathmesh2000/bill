@@ -90,7 +90,6 @@ const Home = () => {
             <label>Select Salesman:</label>
             <select value={selectedSalesman} onChange={(e) => setSelectedSalesman(e.target.value)}>
               <option value="">Select</option>
-              {console.log(salesmen, "salesmensalesmen")}
               {salesmen.map(salesman => (
                 <option key={salesman.id} value={salesman.name}>{salesman.name}</option>
               ))}

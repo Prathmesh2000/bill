@@ -6,7 +6,7 @@ import NavBar from "../src/component/NavBar";
 export default function AddSalesmen(props) {
     const { data = [] } = props;
     const [search, setSearch] = useState('');
-    const [salesmenList, setSalesmenList] = useState(data);
+    const [customerList, setCustomerList] = useState(data);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [number, setNumber] = useState('');
@@ -14,10 +14,10 @@ export default function AddSalesmen(props) {
 
     useEffect(() => {
         if (search) {
-            let salesmenListTemp = data.filter(e => e?.name?.includes(search));
-            setSalesmenList([...salesmenListTemp]);
+            let customerListTemp = data.filter(e => e?.name?.includes(search));
+            setCustomerList([...customerListTemp]);
         } else {
-            setSalesmenList(data);
+            setCustomerList(data);
         }
     }, [search]);
 
@@ -26,8 +26,8 @@ export default function AddSalesmen(props) {
         setSearch(value);
     };
 
-    const handleAddSalesmen = async () => {
-        fetch('/api/addsalesmen', {
+    const handleAddCustomer = async () => {
+        fetch('/api/addcustomer', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export default function AddSalesmen(props) {
         <>
             <NavBar />
             <div className={styles.container}>
-                <h3>Add New Salesmen</h3>
+                <h3>Add New Customer</h3>
                 <div className={styles['add-salesmen-form']}>
                     <div>
                         <label htmlFor="name">Enter Name:</label>
@@ -65,16 +65,16 @@ export default function AddSalesmen(props) {
                         <label htmlFor="balance">Enter Balance:</label>
                         <input value={balance} onChange={(e)=>setBalance(e.target.value)} type="number" id="balance" name="balance" required />
                     </div>
-                    <button onClick={handleAddSalesmen}>Add Salesman</button>
+                    <button onClick={handleAddCustomer}>Add Customer</button>
                 </div>
 
-                <h3>Salesmen List</h3>
+                <h3>Customer List</h3>
                 <div className={styles['search-bar']}>
                     <input value={search} onChange={handleSearch} placeholder="Search salesmen..." />
                 </div>
                 <div className={styles['salesmen-list']}>
                     {
-                        salesmenList.map((val, i) => {
+                        customerList.map((val, i) => {
                             let { name = '', email = '', number = '', balance = 0 } = val;
                             return (
                                 <div className={styles['salesmen-item']} id={`salesmen_${i}`} key={`salesmen_${i}`}>
@@ -108,7 +108,7 @@ export async function getServerSideProps() {
     const client = await clientPromise;
     const db = client.db('billing_app');
 
-    const data = await db.collection('salesman').find({}).toArray();
+    const data = await db.collection('customer').find({}).toArray();
     data.map((e) => delete e['_id']);
     return {
         props: {

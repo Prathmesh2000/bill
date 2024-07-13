@@ -52,7 +52,7 @@ export default function AddSalesmen(props) {
 
                 <h3>Product List</h3>
                 <div className={styles['search-bar']}>
-                    <input value={search} onChange={handleSearch} placeholder="Search salesmen..." />
+                    <input value={search} onChange={handleSearch} placeholder="Search Products..." />
                 </div>
                 <div className={styles['salesmen-list']}>
                     {

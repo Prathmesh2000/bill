@@ -70,7 +70,7 @@ export default function AddSalesmen(props) {
 
                 <h3>Customer List</h3>
                 <div className={styles['search-bar']}>
-                    <input value={search} onChange={handleSearch} placeholder="Search salesmen..." />
+                    <input value={search} onChange={handleSearch} placeholder="Search Customer..." />
                 </div>
                 <div className={styles['salesmen-list']}>
                     {

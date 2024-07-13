@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
 import clientPromise from "../utils/lib/db";
 import styles from "../styles/AddSalesmen.module.scss";
 

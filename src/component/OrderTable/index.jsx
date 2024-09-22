@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 const DataTable = ({ data, HeaderLabels }) => {
     const [search, setSearch] = useState('');
     const [sortConfig, setSortConfig] = useState(null);
+    const [editIndex, setEditIndex] = useState(-1);
 
     const handleSearch = (e) => {
         setSearch(e.target.value);
@@ -47,6 +48,14 @@ const DataTable = ({ data, HeaderLabels }) => {
         XLSX.writeFile(wb, 'data.xlsx');
     };
 
+    // const handleUpdateClick = (id, index) => {
+
+    // }
+
+    // const handleEditClick = (index) => {
+    //     setEditIndex(index);
+    // }
+
     return (
         <div className={styles.container}>
             <div className={styles.searchContainer}>
@@ -76,11 +85,19 @@ const DataTable = ({ data, HeaderLabels }) => {
                             <td key={`selectedSalesman_${index}`}>{typeof item?.selectedSalesman === 'object' ? JSON.stringify(item?.selectedSalesman) : item?.selectedSalesman || ''}</td>
                             <td key={`customerName_${index}`}>{typeof item?.customerName === 'object' ? JSON.stringify(item?.customerName) : item?.customerName || ''}</td>
                             <td key={`productData_${index}`}>{typeof item?.productData === 'object' ? JSON.stringify(item?.productData) : item?.productData || ''}</td>
-                            <td key={`paymentMode_${index}`}>{typeof item?.paymentMode === 'object' ? JSON.stringify(item?.paymentMode) : item?.paymentMode || ''}</td>
                             <td key={`totalAmount_${index}`}>{typeof item?.totalAmount === 'object' ? JSON.stringify(item?.totalAmount) : item?.totalAmount || ''}</td>
-                            <td key={`receivedAmount_${index}`}>{typeof item?.receivedAmount === 'object' ? JSON.stringify(item?.receivedAmount) : item?.receivedAmount || ''}</td>
+                            <td key={`onlineReceivedAmount_${index}`}>{typeof item?.onlineReceivedAmount === 'object' ? JSON.stringify(item?.onlineReceivedAmount) : item?.onlineReceivedAmount || ''}</td>
+                            <td key={`cashReceivedAmount_${index}`}>{typeof item?.cashReceivedAmount === 'object' ? JSON.stringify(item?.cashReceivedAmount) : item?.cashReceivedAmount || ''}</td>
                             <td key={`balance_${index}`}>{typeof item?.balance === 'object' ? JSON.stringify(item?.balance) : item?.balance || ''}</td>
                             <td key={`date_${index}`}>{typeof item?.date === 'object' ? JSON.stringify(item?.date) : item?.date || ''}</td>
+                            {/* <td key={`button_${index}`}>
+                                {
+                                editIndex === index ? 
+                                    <button className={styles['edit-button']} onClick={()=>handleUpdateClick(_id, index)}>Update</button>
+                                    :
+                                    <button className={styles['edit-button']} onClick={()=>handleEditClick(index)}>Edit</button>
+                                }
+                            </td> */}
                         </tr>
                     ))}
                 </tbody>

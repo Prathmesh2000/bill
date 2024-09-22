@@ -10,12 +10,13 @@ const Home = () => {
   const [customerName, setCustomerName] = useState('');
   const [products, setProducts] = useState([]);
   const [productData, setProductData] = useState([{ id: 1, name: '', unit: '', qty: '', price: '' }]);
-  const [paymentMode, setPaymentMode] = useState('');
-  const [receivedAmount, setReceivedAmount] = useState('');
+  const [onlineReceivedAmount, setOnlineReceivedAmount] = useState('');
+  const [cashReceivedAmount, setCashReceivedAmount] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
   const [balance, setBalance] = useState(0);
   const [ogBalance, setOgBalance] = useState(0)
-
+  const [selectProductData, setSelectProductData] = useState({});
+  
   useEffect(() => {
     fetch('/api/salesmen')
       .then(res => res.json())
@@ -36,11 +37,34 @@ const Home = () => {
       total += (product.qty * product.price);
     });
     setTotalAmount(total);
-    setBalance(receivedAmount - total + Number(ogBalance));
-  }, [productData, receivedAmount]);
+    setBalance(Number(onlineReceivedAmount) + Number(cashReceivedAmount) - total + Number(ogBalance));
+  }, [productData, onlineReceivedAmount, cashReceivedAmount]);
 
-  const handleProductChange = (index, field, value) => {
+  const handleProductChange = (index, field, value, product={}) => {
     const newProductData = [...productData];
+    
+    if(field === 'name') setSelectProductData(product);
+
+    if(['name', 'unit'].includes(field)){
+      let data = (field === 'unit') ? selectProductData : product;
+      let unit = (field === 'unit') ? value : productData?.[index]?.['unit'];
+
+      switch(unit?.toLowerCase() || null){
+        case 'box':
+          newProductData[index]['price'] = data?.boxPrice || 0;
+          break;
+        case 'grams':
+          newProductData[index]['price'] = data?.gramPrice || 0;
+          break;
+        case 'kgs':
+          newProductData[index]['price'] = data?.kgPrice || 0;
+          break;
+        case 'packs':
+          newProductData[index]['price'] = data?.packPrice || 0;
+          break;
+      }
+    } 
+    
     newProductData[index][field] = value;
     setProductData(newProductData);
   };
@@ -60,8 +84,8 @@ const Home = () => {
       selectedSalesman,
       customerName,
       productData,
-      paymentMode,
-      receivedAmount,
+      onlineReceivedAmount,
+      cashReceivedAmount,
       totalAmount,
       balance
     };
@@ -135,18 +159,23 @@ const Home = () => {
             </div>
           )}
         </div>
-
         <h2>Products</h2>
         {productData.map((product, index) => (
           <div className={`${styles.formGroup} ${styles.productGroup}`} key={product.id}>
             <div>
               <label>Product</label>
-              <select value={product.name} onChange={(e) => handleProductChange(index, 'name', e.target.value)}>
+              <select value={product.name} onChange={(e) => {
+                const selectedOption = e.target.selectedOptions[0];
+                const id = selectedOption.getAttribute('id'); 
+                const productObj = products.find(p => p._id === id);
+                handleProductChange(index, 'name', e.target.value, productObj)
+                }}>
                 <option value="">Select Product</option>
                 {products.map(p => (
-                  <option key={p.id} value={p.name}>{p.name}</option>
+                  <option id={p._id} key={p._id} value={p.name}>{p.name}</option>
                 ))}
               </select>
+
             </div>
             <div>
               <label>Unit</label>
@@ -164,7 +193,7 @@ const Home = () => {
             </div>
             <div>
               <label>Price</label>
-              <input type="number" placeholder="Price" value={product.price} onChange={(e) => handleProductChange(index, 'price', e.target.value)} />
+              <input disabled type="number" placeholder="Price" value={product.price} onChange={(e) => handleProductChange(index, 'price', e.target.value)} />
             </div>
             {index > 0 && <button className={styles.buttonClass} onClick={() => removeProduct(index)}>Remove</button>}
           </div>
@@ -172,21 +201,22 @@ const Home = () => {
         <button className={styles.buttonClass} onClick={addProduct}>Add Product</button>
 
         <h2>Payment</h2>
+
         <div className={styles.formGroup}>
-          <div className={styles.radioGroup}>
-            <label>
-              <input type="radio" value="online" checked={paymentMode === 'online'} onChange={() => setPaymentMode('online')} />
-              Online
-            </label>
-            <label>
-              <input type="radio" value="cash" checked={paymentMode === 'cash'} onChange={() => setPaymentMode('cash')} />
-              Cash
-            </label>
-          </div>
 
           <div>
-            <label>Received Amount:</label>
-            <input type="number" value={receivedAmount} onChange={(e) => setReceivedAmount(e.target.value)} />
+            <h3>Received Amount</h3>
+            <div className={styles['receivedAmountWrapper']}>
+              <div className={styles['w-46']} >
+                <label> Online: </label>
+                <input type="number" value={onlineReceivedAmount} onChange={(e) => setOnlineReceivedAmount(e.target.value)} />
+              </div>
+
+              <div className={styles['w-46']}>
+                <label> Cash:</label>
+                <input  type="number" value={cashReceivedAmount} onChange={(e) => setCashReceivedAmount(e.target.value)} />
+              </div>
+            </div>
           </div>
 
           <div>

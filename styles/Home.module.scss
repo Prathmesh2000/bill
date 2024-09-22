@@ -21,7 +21,18 @@
 
 .formGroup {
     margin-bottom: 1em;
-  
+
+    .receivedAmountWrapper{
+      display: flex;
+      justify-content: space-between;
+      .w-46{
+        width: calc(46% - 8px) !important;
+        input {
+          width: calc(100% - 22px) !important;
+        }
+      }
+    }
+
     label {
       display: block;
       margin-bottom: 0.5em;
@@ -60,6 +71,7 @@
   }
   
   .balance {
+    font-size: 1.2rem;
     color: blue;
   
     &.negative {

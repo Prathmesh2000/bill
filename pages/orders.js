@@ -4,7 +4,8 @@ import DataTable from "../src/component/OrderTable";
 import NavBar from "../src/component/NavBar";
 
 export default function orders ({data}) {
-    const HeaderLabels = ["Person Type", "Salesman Name", "Customer Name", "Product Data", "Payment Mode", "Total Amount", "Received Amount", "Balance", "Date"];
+    console.log(data, 'datadata')
+    const HeaderLabels = ["Person Type", "Salesman Name", "Customer Name", "Product Data", "Total Amount", "Online Received Amount", "Cash Received Amount", "Balance", "Date", "Action"];
     return (
         <>
             <NavBar />
@@ -17,11 +18,15 @@ export async function getServerSideProps() {
     const client = await clientPromise;
     const db = client.db('billing_app');
 
-    const data = await db.collection('orders').find({}).toArray();
-    data.map((e) => delete e['_id']);
+    const data = await db.collection('orders').find({}).sort({ date: -1 }).toArray();
+
+    const updatedData = data.map((e) => {
+        const { _id, ...rest } = e;
+        return { _id: JSON.stringify(_id), ...rest };
+    }); 
     return {
         props: {
-            data: data || []
+            data: updatedData || []
         }
     };
 }
